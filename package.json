@@ -26,7 +26,7 @@
   },
   "proxy": "http://localhost:5000/",
   "scripts": {
-    "client:build": "react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "client": "yarn start",
@@ -34,7 +34,7 @@
     "server:test": "jest",
     "dev": "concurrently --kill-others \"yarn server\" \"react-scripts start\"",
     "start": "node server/index.js",
-    "heroku-postbuild": "npm run start:build"
+    "heroku-postbuild": "npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "eslintConfig": {
     "extends": [
