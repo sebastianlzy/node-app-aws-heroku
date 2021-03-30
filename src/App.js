@@ -44,7 +44,7 @@ class App extends Component {
                 <Header>
                     <div className="logo" />
                     <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-                        <Menu.Item key="1">EC2 on-demand</Menu.Item>
+                        <Menu.Item key="1">EC2 on-demand pricing</Menu.Item>
                         {/*<Menu.Item key="2">EC2 Reserved instance</Menu.Item>*/}
                         {/*<Menu.Item key="3">RDS on-demand</Menu.Item>*/}
                         {/*<Menu.Item key="4">RDS Reserved instance</Menu.Item>*/}
