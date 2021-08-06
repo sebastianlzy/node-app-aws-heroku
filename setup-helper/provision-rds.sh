@@ -3,7 +3,7 @@
 
 echo ""
 echo -n Enter a master password:
-read -s password
+read -s RDS_POSTGRES_PASSWORD
 echo
 
 timestamp() {
@@ -12,14 +12,15 @@ timestamp() {
 
 export RDS_POSTGRES_IDENTIFIER=aws-postgres-instance-$(timestamp)
 export RDS_POSTGRES_VERSION=13.2
+export RDS_POSTGRES_USERNAME=postgres
 
 aws rds create-db-instance \
     --db-instance-identifier $RDS_POSTGRES_IDENTIFIER \
     --db-instance-class db.t3.micro \
     --engine postgres \
     --engine-version $RDS_POSTGRES_VERSION\
-    --master-username postgres \
-    --master-user-password $password \
+    --master-username $RDS_POSTGRES_USERNAME \
+    --master-user-password $RDS_POSTGRES_PASSWORD \
     --allocated-storage 20
 
 # Wait until db is creating
