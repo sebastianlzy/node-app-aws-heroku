@@ -13,6 +13,7 @@ timestamp() {
 export RDS_POSTGRES_IDENTIFIER=aws-postgres-instance-$(timestamp)
 export RDS_POSTGRES_VERSION=13.2
 export RDS_POSTGRES_USERNAME=postgres
+export RDS_POSTGRES_SCHEMA=postgres
 
 aws rds create-db-instance \
     --db-instance-identifier $RDS_POSTGRES_IDENTIFIER \
