@@ -29,3 +29,6 @@ sudo yum -y install postgresql13
 
 ## Verify postgres installation
 psql --version
+
+## Install jq
+sudo yum install jq -y
