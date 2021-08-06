@@ -1,70 +1,67 @@
-# Getting Started with Create React App
+# Objective
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A demo to guide migration from Heroku Postgres to AWS RDS Postgres
 
-## Available Scripts
+# Setup
 
-In the project directory, you can run:
+## 1. Create Cloud9 instance
 
-### `yarn start`
+1. Sign in to the AWS Management Console and open the Cloud9 console at https://ap-southeast-1.console.aws.amazon.com/cloud9/home
+2. Choose `Create environment`
+3. Select `t3.small` instance type
+4. Enter a name and choose `Next step`
+5. Use default settings and choose `Next step`
+6. Review settings and choose `Create environment`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## 2. Configure cloud9 environment
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+1. Create a terminal shell
+2. Beside the welcome tab, click `+`
+3. Choose `New Terminal`
+4. Run `git clone https://github.com/sebastianlzy/node-app-aws-heroku` 
+5. Run `. ./setup-helper/install-prerequisite.sh`
 
-### `yarn test`
+## 3. Create a new RDS postgres 13 database in AWS
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Sign in to the AWS Management Console and open the RDS console at https://ap-southeast-1.console.aws.amazon.com/rds/home
+2. Choose `Create database`
+3. Choose `Standard create`
+4. Under Engine options
+    1. For engine type, choose `PostgresSQL`
+    2. For version, choose `PostgresSQL 13.2-R1`
+5. Under Templates
+    1. Choose Dev/Test
+6. Under Settings
+    1. Enter `aws-rds-postgres` as "DB instance identifier"
+    2. Enter `postgres` as "username"
+    3. Enter a password for the "Master password"
+    4. Enter the same password for "Confirm password"
+7. Under DB instance class
+    1. Choose `Burstable classes`, then select `db.t3.micro`
+8. Leave the rest as default and choose `Create database`
+9. Wait for database to be created
+10. Under connectivity & security
+    1. Copy the Endpoint value
+    
+## 4. Migrate data from heroku:postgres database
 
-### `yarn build`
+1. Sign in to Heroku and navigate to the app at [https://dashboard.heroku.com/apps](https://dashboard.heroku.com/apps)
+2. On the app, choose `Settings`
+3. Under Config Vars, choose `Reveal Config Vars`
+    1. Copy the value for `DATABASE_URL`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 5. On cloud9 terminal
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. export env variable
+```
+> export HEROKU_POSTGRES_URL= <Value copied from Heroku Postgres (Step 4.3.1) 
+> export RDS_POSTGRES_URL=<Value copied from AWS RDS Postgres (Step 3.10.1)>     
+> export RDS_POSTGRES_PASSWORD=<Value copied from AWS RDS Postgres (Step 6.3)>   
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Download data from Heroku
+    1. Run `pg_dump -v -Fc $HEROKU_POSTGRES_URL`
+2. Restore data to AWS RDS
+    1. Run `pg_restore -v -h $RDS_POSTGRES_URL -U postgres -d postgres < db.dmp  `
+    
+    
