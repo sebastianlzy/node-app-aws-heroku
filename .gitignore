@@ -29,5 +29,5 @@ yarn-error.log*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 
-
+setup-helper/aws-postgres-instance.json
 package-lock.json
