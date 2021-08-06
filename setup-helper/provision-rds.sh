@@ -26,10 +26,10 @@ aws rds create-db-instance \
 echo "Creating Database..."
 aws rds wait db-instance-available --db-instance-identifier $RDS_POSTGRES_IDENTIFIER
 
-echo "Database created"
+
 aws rds describe-db-instances --db-instance-identifier $RDS_POSTGRES_IDENTIFIER > $RDS_POSTGRES_IDENTIFIER.json
 
 export RDS_POSTGRES_URL=$(cat ./$RDS_POSTGRES_IDENTIFIER.json | jq -c ".[][0].Endpoint.Address")
 export RDS_POSTGRES_PASSWORD=$password
 
-echo $RDS_POSTGRES_URL
+echo "Database created with public endpoint: $RDS_POSTGRES_URL"
