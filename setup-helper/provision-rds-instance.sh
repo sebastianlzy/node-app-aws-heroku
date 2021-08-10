@@ -37,12 +37,12 @@ aws rds create-db-instance \
 echo "Provisioning RDS..."
 echo "> aws rds wait db-instance-available --db-instance-identifier $RDS_POSTGRES_IDENTIFIER"
 read -s wait
-#aws rds wait db-instance-available --db-instance-identifier $RDS_POSTGRES_IDENTIFIER
+aws rds wait db-instance-available --db-instance-identifier $RDS_POSTGRES_IDENTIFIER
 
 echo "RDS provisioned"
 echo "> aws rds describe-db-instances --db-instance-identifier $RDS_POSTGRES_IDENTIFIER > $RDS_POSTGRES_IDENTIFIER.json"
 read -s wait
-#aws rds describe-db-instances --db-instance-identifier $RDS_POSTGRES_IDENTIFIER > $RDS_POSTGRES_IDENTIFIER.json
+aws rds describe-db-instances --db-instance-identifier $RDS_POSTGRES_IDENTIFIER > $RDS_POSTGRES_IDENTIFIER.json
 
 echo "Extracting RDS public endpoint"
 echo "> export RDS_POSTGRES_URL=$(cat ./$RDS_POSTGRES_IDENTIFIER.json | jq -c ".[][0].Endpoint.Address" | tr -d '"')"
